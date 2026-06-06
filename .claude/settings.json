@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.venv/bin/python -c ' *)",
+      "Bash(.venv/bin/python -W ignore -c ' *)",
+      "Bash(uv pip *)",
+      "Bash(uv sync *)",
+      "Bash(.venv/bin/uvicorn main:app --host 127.0.0.1 --port 8137 --log-level warning)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:8137/openapi.json)",
+      "Bash(break)",
+      "Bash(curl -s http://127.0.0.1:8137/openapi.json)",
+      "Bash(.venv/bin/python -W ignore -c \"import sys,json; print\\(list\\(json.load\\(sys.stdin\\)['paths'].keys\\(\\)\\)\\)\")",
+      "Bash(curl -s -w '\\\\n[HTTP %{http_code} | %{time_total}s | %{size_download} bytes]\\\\n' 'http://127.0.0.1:8137/pregao/itens?uasg=160298&numero=90019&ano=2025' -o /tmp/resp.json)",
+      "Bash(kill %1)",
+      "Bash(pkill -f \"uvicorn main:app\")",
+      "Bash(command -v node)",
+      "Bash(git config *)",
+      "Bash(echo \"name: $\\(git config user.name || echo VAZIO\\)\")",
+      "Bash(echo \"email: $\\(git config user.email || echo VAZIO\\)\")",
+      "Bash(echo \"name: $\\(git config user.name\\) | email: $\\(git config user.email\\)\")",
+      "Bash(git add *)",
+      "Bash(grep -iE \"\\\\.do$|\\\\.venv|__pycache__|settings.local\")",
+      "Bash(git check-ignore *)",
+      "Bash(git commit -q -m ' *)"
+    ]
+  }
+}

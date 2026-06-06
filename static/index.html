@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Consulta de Itens de Pregão SRP</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="topo">
+    <h1>Consulta de Itens de Pregão SRP</h1>
+    <p class="subtitulo">Informe a UASG, o número e o ano do pregão para listar todos os itens.</p>
+  </header>
+
+  <main class="container">
+    <form id="form-consulta" class="form">
+      <div class="campo">
+        <label for="uasg">UASG</label>
+        <input id="uasg" name="uasg" inputmode="numeric" placeholder="160298" required />
+      </div>
+      <div class="campo">
+        <label for="numero">Nº do Pregão</label>
+        <input id="numero" name="numero" inputmode="numeric" placeholder="90019" required />
+      </div>
+      <div class="campo">
+        <label for="ano">Ano</label>
+        <input id="ano" name="ano" inputmode="numeric" placeholder="2025" required />
+      </div>
+      <button type="submit" id="btn-consultar">Consultar</button>
+    </form>
+
+    <div id="status" class="status" role="status" aria-live="polite"></div>
+
+    <div id="area-resultados" class="resultados" hidden>
+      <div class="resultados-cabecalho">
+        <span id="contador" class="contador"></span>
+        <div class="acoes">
+          <input id="filtro" class="filtro" type="search" placeholder="Filtrar itens…" />
+          <div class="exportar">
+            <span class="exportar-label">Exportar:</span>
+            <button type="button" class="btn-secundario" data-formato="txt">TXT</button>
+            <button type="button" class="btn-secundario" data-formato="csv">CSV</button>
+            <button type="button" class="btn-secundario" data-formato="json">JSON</button>
+          </div>
+        </div>
+      </div>
+      <div class="tabela-wrapper">
+        <table id="tabela" class="tabela">
+          <thead>
+            <tr>
+              <th>Nº do Item</th>
+              <th>Tipo</th>
+              <th>Categoria</th>
+              <th>Item</th>
+              <th>Descrição Detalhada</th>
+              <th>Unid. de Fornecimento</th>
+            </tr>
+          </thead>
+          <tbody id="corpo-tabela"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

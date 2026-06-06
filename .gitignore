@@ -1,0 +1,19 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# HTML capturado do comprasnet (artefatos de scraping, contêm jsessionid)
+*.do
+
+# Configurações locais do Claude Code
+.claude/settings.local.json
+
+# Diversos
+.DS_Store
