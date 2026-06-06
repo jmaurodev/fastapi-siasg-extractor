@@ -233,3 +233,27 @@ button:disabled {
   white-space: nowrap;
   text-align: center;
 }
+
+/* Mobile: empilha o formulário em uma coluna (inputs e botão full-width) */
+@media (max-width: 600px) {
+  .form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .campo input {
+    width: 100%;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  .resultados-cabecalho {
+    align-items: stretch;
+  }
+
+  .filtro {
+    width: 100%;
+  }
+}
