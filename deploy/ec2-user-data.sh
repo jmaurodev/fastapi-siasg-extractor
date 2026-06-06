@@ -15,6 +15,8 @@ APP_DIR="/opt/fastapi-siasg-extractor"
 APP_USER="ec2-user"
 PYTHON_VERSION="3.14"
 PORT=80
+SWAP_FILE="/swapfile"
+SWAP_SIZE_MB=2048
 
 # Helper: executa um comando como o usuário da aplicação, com HOME e PATH certos
 # (o uv guarda o Python gerenciado e o cache no HOME desse usuário).
@@ -22,24 +24,33 @@ run_as_app() {
   sudo -u "$APP_USER" -H env "PATH=/usr/local/bin:/usr/bin:/bin" "$@"
 }
 
-# 1) Pacotes base
+# 1) Swap (rede de segurança contra OOM nos 512 MB de RAM do t4g.nano)
+if ! swapon --show | grep -q "$SWAP_FILE"; then
+  dd if=/dev/zero of="$SWAP_FILE" bs=1M count="$SWAP_SIZE_MB" status=none
+  chmod 600 "$SWAP_FILE"
+  mkswap "$SWAP_FILE"
+  swapon "$SWAP_FILE"
+  grep -q "$SWAP_FILE" /etc/fstab || echo "$SWAP_FILE none swap sw 0 0" >>/etc/fstab
+fi
+
+# 2) Pacotes base
 dnf -y update
 dnf -y install git
 
-# 2) uv (gerencia dependências e o próprio Python), instalado system-wide
+# 3) uv (gerencia dependências e o próprio Python), instalado system-wide
 export UV_INSTALL_DIR="/usr/local/bin"
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# 3) Código (clone raso da branch main)
+# 4) Código (clone raso da branch main)
 rm -rf "$APP_DIR"
 git clone --depth 1 "$REPO_URL" "$APP_DIR"
 chown -R "$APP_USER":"$APP_USER" "$APP_DIR"
 
-# 4) Python 3.14 (build standalone) + dependências exatas do uv.lock
+# 5) Python 3.14 (build standalone) + dependências exatas do uv.lock
 run_as_app uv python install "$PYTHON_VERSION"
 run_as_app uv sync --project "$APP_DIR" --frozen
 
-# 5) Serviço systemd: inicia no boot, reinicia em falha, bind na porta 80
+# 6) Serviço systemd: inicia no boot, reinicia em falha, bind na porta 80
 cat >/etc/systemd/system/siasg-extractor.service <<EOF
 [Unit]
 Description=FastAPI SIASG Extractor
